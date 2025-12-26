@@ -265,8 +265,9 @@ CREATE TABLE examDetails
 (
     examId INT IDENTITY(1,1) PRIMARY KEY,
     examTitle VARCHAR(50),
-    examDuration INT,
+    examDuration INT,  -- duration in minutes
     examDate DATETIME DEFAULT GETDATE(),
+    examEndTime AS DATEADD(MINUTE, examDuration, examDate),  -- computed column
     examDescription VARCHAR(200),
     courseID INT,
     FOREIGN KEY (courseID) REFERENCES Course(courseId)
@@ -274,6 +275,7 @@ CREATE TABLE examDetails
         ON UPDATE CASCADE
 );
 GO
+
 
 CREATE TABLE studentExam
 (
@@ -308,7 +310,7 @@ GO
 CREATE TABLE question
 (
     questionId INT IDENTITY(1,1) PRIMARY KEY,
-    questionText VARCHAR(100) NOT NULL,
+    questionText VARCHAR(200) NOT NULL,
     questionGrade INT,
     questionType BIT,
     courseId INT,
@@ -321,7 +323,7 @@ GO
 CREATE TABLE choice
 (
     choiceId INT IDENTITY(1,1) PRIMARY KEY,
-    choiceText VARCHAR(50) NOT NULL,
+    choiceText VARCHAR(200) NOT NULL,
     questionId INT,
     FOREIGN KEY (questionId) REFERENCES question(questionId)
         ON DELETE CASCADE
